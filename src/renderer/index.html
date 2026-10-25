@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'" />
+  <title>Island</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="../../node_modules/marked/lib/marked.umd.js"></script>
+  <script src="../../node_modules/dompurify/dist/purify.min.js"></script>
+</head>
+<body>
+  <div id="srStatus" class="sr-only" role="status" aria-live="polite"></div>
+  <div id="island" class="island collapsed" data-state="idle">
+    <div class="aura"></div>
+
+    <!-- collapsed pill -->
+    <div class="pill">
+      <div class="orb"></div>
+      <div class="pill-center">
+        <span class="pill-primary" id="pillPrimary"></span>
+        <span class="pill-secondary" id="pillSecondary"></span>
+      </div>
+      <div class="pill-right" id="pillRight">
+        <div class="meter" title="CPU"><i id="cpuBar"></i></div>
+        <div class="meter" title="RAM"><i id="memBar"></i></div>
+      </div>
+      <div class="pill-plan" id="pillPlan"></div>
+      <div class="wave" id="pillWave"><i></i><i></i><i></i><i></i><i></i></div>
+      <svg class="timer-ring" id="timerRing" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" /><circle class="prog" cx="10" cy="10" r="8" /></svg>
+    </div>
+
+    <!-- expanded panel -->
+    <div class="panel" id="panel">
+      <div class="panel-inner" id="panelInner">
+        <div class="grip" id="grip" title="Drag to move, double-click to reset"><i></i></div>
+        <div class="compact-head" id="compactHead"><div class="orb"></div><span>Island needs you</span><button class="btn link" id="compactOpen">Open chat</button></div>
+
+        <header class="composer">
+          <div class="field-wrap">
+            <div class="orb big" title="Drag to move"></div>
+            <textarea id="input" rows="1" placeholder="Ask anything, or type / for commands" spellcheck="true"></textarea>
+            <div class="wave in-field" id="fieldWave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <button class="icon-btn" id="micBtn" title="Talk (Alt+Shift+M)"></button>
+            <button class="icon-btn" id="liveBtn" title="Live conversation (Ctrl+Shift+L)"></button>
+            <button class="icon-btn" id="screenBtn" title="Include my screen (Ctrl+Shift+S)"></button>
+            <button class="icon-btn" id="attachBtn" title="Attach files"></button>
+            <button class="send-btn" id="sendBtn" title="Send (Enter)"></button>
+          </div>
+          <input type="file" id="fileInput" multiple hidden />
+        </header>
+        <div class="chips" id="chips"></div>
+        <div class="quick" id="quick" hidden></div>
+        <div class="slash" id="slash"></div>
+
+        <main class="body" id="body">
+          <section class="empty" id="empty">
+            <div class="health-banner" id="healthBanner" hidden></div>
+            <div class="incog-banner" id="incogBanner" hidden></div>
+            <div class="hero">
+              <div class="greeting" id="greeting"></div>
+            </div>
+            <div class="suggestions" id="suggestions"></div>
+            <div class="recent" id="recent"></div>
+            <div class="timers" id="timersList"></div>
+            <p class="ai-note">Answers come from AI and can be wrong. Check anything important.</p>
+          </section>
+          <section class="thread" id="thread" role="log" aria-live="off" aria-label="Conversation"></section>
+          <section class="chats" id="chatsView" hidden></section>
+          <section class="liveview" id="liveView" hidden>
+            <div class="lv-stage"><div class="lv-orb" id="lvOrb" title="Tap to interrupt"></div></div>
+            <div class="lv-phase" id="lvPhase">Listening</div>
+            <div class="lv-you" id="lvYou"></div>
+            <div class="lv-ai" id="lvAi"></div>
+            <div class="lv-share" id="lvShareBadge" hidden><i></i>Island can see your screen</div>
+            <div class="lv-ctl">
+              <button class="lv-btn" id="lvMute" title="Mute microphone"></button>
+              <button class="lv-btn" id="lvShare" title="Share your screen: Island sees it each time you speak"></button>
+              <button class="lv-end" id="lvEnd">End conversation</button>
+              <button class="lv-btn" id="lvFold" title="Fold Island away and keep talking"></button>
+            </div>
+          </section>
+          <section class="settings" id="settings" hidden></section>
+          <button class="jump" id="jumpBtn" hidden>Latest ↓</button>
+        </main>
+        <div class="prompt" id="prompt"></div>
+
+        <footer class="footer">
+          <button class="stop-btn" id="stopBtn" hidden title="Stop what Island is doing">Stop</button>
+          <button class="model-chip" id="modelChip" title="Choose model (Ctrl+M)"></button>
+          <div class="pc-ctl" id="pcCtl">
+            <button class="pc-switch" id="agentBtn" role="switch" aria-checked="false"></button>
+            <button class="pc-mode" id="modeChip"></button>
+          </div>
+          <span class="usage" id="usage" hidden></span>
+          <span class="spacer"></span>
+          <span class="incog-tag" id="incogTag" hidden title="Private chat: not saved, no memory"></span>
+          <button class="icon-btn small" id="chatsBtn" title="Your chats (Ctrl+H)"></button>
+          <button class="icon-btn small" id="quitBtn" title="Close Island completely"></button>
+          <button class="icon-btn small" id="incogBtn" hidden title="New private chat (Ctrl+Shift+N): not saved, no memory"></button>
+          <button class="icon-btn small" id="newBtn" title="New chat (Ctrl+N)"></button>
+          <button class="icon-btn small" id="fullBtn" title="Full screen (F11)"></button>
+          <button class="icon-btn small" id="settingsBtn" title="Settings (Ctrl+,)"></button>
+        </footer>
+
+        <div class="picker" id="picker" hidden>
+          <div class="picker-top">
+            <div class="picker-search"><span class="ps-ic"></span><input id="pickerInput" placeholder="Search models, providers, or type an id" spellcheck="false" /><kbd>Esc</kbd></div>
+            <div class="picker-filters" id="pickerFilters"></div>
+          </div>
+          <div class="picker-list" id="pickerList"></div>
+          <div class="picker-foot" id="pickerFoot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="drop-overlay" id="dropOverlay">Drop files to attach</div>
+    <div class="rz rz-n" data-edge="n"></div>
+    <div class="rz rz-s" data-edge="s"></div>
+    <div class="rz rz-e" data-edge="e"></div>
+    <div class="rz rz-w" data-edge="w"></div>
+    <div class="rz rz-ne" data-edge="ne"></div>
+    <div class="rz rz-nw" data-edge="nw"></div>
+    <div class="rz rz-se" data-edge="se" title="Drag to resize, double-click to reset"></div>
+    <div class="rz rz-sw" data-edge="sw"></div>
+  </div>
+  <script src="icons.js"></script>
+  <script src="logos.js"></script>
+  <script src="i18n/hi.js"></script>
+  <script src="i18n.js"></script>
+  <script src="voice.js"></script>
+  <script src="orb.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
