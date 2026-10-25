@@ -1,0 +1,147 @@
+{
+  "name": "island-assistant",
+  "version": "1.19.0",
+  "description": "Dynamic-Island style AI assistant for Windows, powered by Claude",
+  "keywords": [
+    "windows",
+    "ai-assistant",
+    "desktop-assistant",
+    "electron",
+    "claude",
+    "gemini",
+    "ollama",
+    "computer-use",
+    "mcp",
+    "voice-assistant",
+    "accessibility",
+    "hindi"
+  ],
+  "homepage": "https://github.com/anythingeverything556-blip/island-assistant#readme",
+  "bugs": {
+    "url": "https://github.com/anythingeverything556-blip/island-assistant/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anythingeverything556-blip/island-assistant.git"
+  },
+  "license": "AGPL-3.0-only",
+  "author": "AnythingEverything (https://github.com/anythingeverything556-blip)",
+  "updates": "anythingeverything556-blip/island-assistant",
+  "main": "src/main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "icon": "node scripts/make-icon.js",
+    "dist": "node scripts/build-helpers.js && electron-builder --win nsis",
+    "assets": "node scripts/build-assets.js",
+    "test:smoke": "node scripts/smoke-test.js",
+    "test:connectors": "node scripts/mcp-sleep-test.js",
+    "build:helpers": "node scripts/build-helpers.js",
+    "test:speech": "node scripts/speech-services-test.js",
+    "test:google": "node scripts/google-key-test.js",
+    "test:account": "node scripts/account-test.js",
+    "test:hold": "electron scripts/hold-test.js",
+    "test:search": "node scripts/search-test.js",
+    "test:search-providers": "node scripts/search-providers-test.js",
+    "test:providers": "node scripts/provider-test.js",
+    "test:logos": "node scripts/logos-test.js",
+    "test:effort": "node scripts/effort-test.js",
+    "test:stop": "node scripts/stop-test.js",
+    "test:stop-kill": "node scripts/stop-kill-test.js",
+    "test:live": "node scripts/live-check.js",
+    "test": "node scripts/mcp-sleep-test.js && node scripts/speech-services-test.js && node scripts/google-key-test.js && node scripts/search-providers-test.js && node scripts/provider-test.js && node scripts/logos-test.js && node scripts/effort-test.js && node scripts/smoke-test.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.134.0",
+    "@fontsource-variable/atkinson-hyperlegible-mono": "^5.3.0",
+    "@fontsource-variable/atkinson-hyperlegible-next": "^5.3.0",
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "@fontsource-variable/noto-sans-devanagari": "^5.3.0",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "docx": "^9.12.0",
+    "dompurify": "^3.4.17",
+    "exceljs": "^4.4.0",
+    "marked": "^18.1.1",
+    "npm": "^12.2.0",
+    "pptxgenjs": "^4.0.1",
+    "unpdf": "^1.9.0"
+  },
+  "devDependencies": {
+    "@lobehub/icons-static-svg": "^1.95.1",
+    "electron": "^44.7.2",
+    "electron-builder": "^26.15.3",
+    "lucide-static": "^1.58.0"
+  },
+  "build": {
+    "appId": "com.island.assistant",
+    "productName": "Island",
+    "copyright": "Copyright © 2026 AnythingEverything",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "electronDist": "node_modules/electron/dist",
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Island",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "include": "build/installer.nsh"
+    },
+    "asarUnpack": [
+      "node_modules/npm/**"
+    ],
+    "electronLanguages": [
+      "en-US",
+      "en-GB",
+      "hi",
+      "bn",
+      "ta",
+      "te",
+      "mr",
+      "gu",
+      "kn",
+      "ml",
+      "es",
+      "fr",
+      "de",
+      "pt-BR",
+      "ar",
+      "zh-CN",
+      "ja",
+      "ru",
+      "id"
+    ],
+    "electronFuses": {
+      "runAsNode": true,
+      "enableCookieEncryption": true,
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableEmbeddedAsarIntegrityValidation": true,
+      "onlyLoadAppFromAsar": true
+    },
+    "extraResources": [
+      {
+        "from": "helpers",
+        "to": "helpers",
+        "filter": [
+          "*.exe"
+        ]
+      }
+    ]
+  }
+}
