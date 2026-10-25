@@ -1,0 +1,18 @@
+node_modules/
+dist/
+dist-*/
+helpers/*.exe
+eval-results/
+.shots/
+research/
+*.log
+*.tmp
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+
+# Local secrets and environment files
+.env
+.env.*
